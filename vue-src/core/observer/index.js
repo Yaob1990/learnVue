@@ -235,11 +235,15 @@ export function set (target: Array<any> | Object, key: any, val: any): any {
   /*如果传入数组则在指定位置插入val*/
   if (Array.isArray(target) && typeof key === 'number') {
     target.length = Math.max(target.length, key)
+    // analyse: set 其实就是调用了 splice 方法
     target.splice(key, 1, val)
     /*因为数组不需要进行响应式处理，数组会修改七个Array原型上的方法来进行响应式处理*/
     return val
   }
   /*如果是一个对象，并且已经存在了这个key则直接返回*/
+  // analyse: 自有属性，直接返回
+  // 这里可能版本原因是有问题的 https://github.com/vuejs/vue/issues/6845
+  // 已有的属性必然是响应式的，默认会初始化 getter setter
   if (hasOwn(target, key)) {
     target[key] = val
     return val
@@ -261,12 +265,16 @@ export function set (target: Array<any> | Object, key: any, val: any): any {
     )
     return val
   }
+  // analyse: 为真说明当前的target对象不是响应式对象，那么直接赋值返回即可。
+  // 不会触发页面的重新渲染
   if (!ob) {
     target[key] = val
     return val
   }
   /*为对象defineProperty上在变化时通知的属性*/
+  // analyse: 重新设置值为响应式的
   defineReactive(ob.value, key, val)
+  // analyse: 触发通知，页面开始重新渲染
   ob.dep.notify()
   return val
 }

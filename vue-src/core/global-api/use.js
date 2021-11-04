@@ -13,10 +13,11 @@ export function initUse (Vue: GlobalAPI) {
     }
     // additional parameters
     const args = toArray(arguments, 1)
-    /*a*/
+    // analyse: 往args前面插入当前Vue对象，所以后续的回调函数的第一个参数就是这个Vue对象
     args.unshift(this)
     if (typeof plugin.install === 'function') {
       /*install执行插件安装*/
+      // analyse: 传递 this（vue） 和 其他参数，给到插件内部处理
       plugin.install.apply(plugin, args)
     } else if (typeof plugin === 'function') {
       plugin.apply(null, args)
