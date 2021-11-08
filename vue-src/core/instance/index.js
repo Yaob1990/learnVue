@@ -8,6 +8,7 @@ import { warn } from '../util/index'
 function Vue (options) {
   if (process.env.NODE_ENV !== 'production' &&
     !(this instanceof Vue)) {
+    // analyse: 需要使用 new 构造函数调用
     warn('Vue is a constructor and should be called with the `new` keyword')
   }
   /*初始化*/

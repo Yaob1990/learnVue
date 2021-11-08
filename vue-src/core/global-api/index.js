@@ -56,6 +56,22 @@ export function initGlobalAPI (Vue: GlobalAPI) {
 
   extend(Vue.options.components, builtInComponents)
 
+  // analyse: extend 之后，变成了这样
+  // Vue.options.components = {
+  //   KeepAlive
+  // }
+
+  // analyse: 目前位置：变成了这样
+  
+  // Vue.options = {
+  //   components: {
+  //     KeepAlive
+  //   },
+  //   directives: Object.create(null),
+  //   filters: Object.create(null),
+  //   _base: Vue
+  // }
+
   initUse(Vue)
   initMixin(Vue)
   initExtend(Vue)
